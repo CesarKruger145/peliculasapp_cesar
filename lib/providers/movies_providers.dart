@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculasapp_cesar/models/credits_response.dart';
 import 'package:peliculasapp_cesar/models/now_playing_response.dart';
 import 'package:peliculasapp_cesar/models/popular_response.dart';
 
@@ -14,6 +15,9 @@ class MovieProviders extends ChangeNotifier {
   //crear este list para mostar las imagenes
   List<Movie> ondisplayMovies = [];
   List<Movie> popularMovie = [];
+
+  //crear un map
+  Map<int, List<Cast>> movieCast = {};
 
   MovieProviders() {
     print('MoviesProvider Inicializado');
@@ -45,5 +49,18 @@ class MovieProviders extends ChangeNotifier {
     //print(popularResponse.results[1].title);
     popularMovie = [...popularMovie, ...popularResponse.results];
     notifyListeners();
+  }
+
+  Future<List<Cast>> getMovieCast(int movieId) async {
+    var url = Uri.https(_baseUrl, '3/movie/$movieId/credits',
+        {'api_key': _apikey, 'language': _language, 'page': '1'});
+
+    // Await the http get response, then decode the json-formatted response.
+    final response = await http.get(url);
+
+    final creditsResponse = CreditsResponse.fromJson(response.body);
+
+    movieCast[movieId] = creditsResponse.cast;
+    return creditsResponse.cast;
   }
 }

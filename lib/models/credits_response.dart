@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-class ReditsResponse {
-  ReditsResponse({
+class CreditsResponse {
+  CreditsResponse({
     required this.id,
     required this.cast,
     required this.crew,
@@ -15,22 +15,22 @@ class ReditsResponse {
   List<Cast> cast;
   List<Cast> crew;
 
-  factory ReditsResponse.fromJson(String str) =>
-      ReditsResponse.fromMap(json.decode(str));
+  factory CreditsResponse.fromJson(String str) =>
+      CreditsResponse.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  //String toJson() => json.encode(toMap());
 
-  factory ReditsResponse.fromMap(Map<String, dynamic> json) => ReditsResponse(
+  factory CreditsResponse.fromMap(Map<String, dynamic> json) => CreditsResponse(
         id: json["id"],
         cast: List<Cast>.from(json["cast"].map((x) => Cast.fromMap(x))),
         crew: List<Cast>.from(json["crew"].map((x) => Cast.fromMap(x))),
       );
 
-  Map<String, dynamic> toMap() => {
+  /*Map<String, dynamic> toMap() => {
         "id": id,
         "cast": List<dynamic>.from(cast.map((x) => x.toMap())),
         "crew": List<dynamic>.from(crew.map((x) => x.toMap())),
-      };
+      };*/
 }
 
 class Cast {
@@ -42,39 +42,45 @@ class Cast {
     required this.name,
     required this.originalName,
     required this.popularity,
-    required this.profilePath,
-    required this.castId,
-    required this.character,
+    this.profilePath,
+    this.castId,
+    this.character,
     required this.creditId,
-    required this.order,
-    required this.department,
-    required this.job,
+    this.order,
+    this.department,
+    this.job,
   });
 
   bool adult;
   int gender;
   int id;
-  Department knownForDepartment;
+  String knownForDepartment;
   String name;
   String originalName;
   double popularity;
-  String profilePath;
-  int castId;
-  String character;
+  String? profilePath;
+  int? castId;
+  String? character;
   String creditId;
-  int order;
-  Department department;
-  String job;
+  int? order;
+  String? department;
+  String? job;
+
+  get fullProfilePath {
+    if (this.profilePath != null)
+      return 'https://image.tmdb.org/t/p/w500${this.profilePath}';
+    return 'https://i.stack.imgur.com/GNhxO.png';
+  }
 
   factory Cast.fromJson(String str) => Cast.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  //String toJson() => json.encode(toMap());
 
   factory Cast.fromMap(Map<String, dynamic> json) => Cast(
         adult: json["adult"],
         gender: json["gender"],
         id: json["id"],
-        knownForDepartment: departmentValues.map[json["known_for_department"]],
+        knownForDepartment: json["known_for_department"],
         name: json["name"],
         originalName: json["original_name"],
         popularity: json["popularity"].toDouble(),
@@ -83,13 +89,11 @@ class Cast {
         character: json["character"] == null ? null : json["character"],
         creditId: json["credit_id"],
         order: json["order"] == null ? null : json["order"],
-        department: json["department"] == null
-            ? null
-            : departmentValues.map[json["department"]],
+        department: json["department"] == null ? null : json["department"],
         job: json["job"] == null ? null : json["job"],
       );
 
-  Map<String, dynamic> toMap() => {
+  /*Map<String, dynamic> toMap() => {
         "adult": adult,
         "gender": gender,
         "id": id,
@@ -105,10 +109,10 @@ class Cast {
         "department":
             department == null ? null : departmentValues.reverse[department],
         "job": job == null ? null : job,
-      };
+      };*/
 }
 
-enum Department {
+/*enum Department {
   ACTING,
   PRODUCTION,
   ART,
@@ -148,4 +152,4 @@ class EnumValues<T> {
     }
     return reverseMap;
   }
-}
+}*/
